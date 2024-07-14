@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hydra Search</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="mainContainer">
+      <h1>"Hydra Search"</h1>
+      <form>
+        <div class="search">
+          <span class="material-symbols-outlined">search</span>
+          <input
+            onkeyup="handleSearch()"
+            class="search-input"
+            type="search"
+            placeholder="Search some stuff: super mario."
+          />
+        </div>
+      </form>
+
+      <div id="loading"></div>
+      <div id="results-info"><h4></h4></div>
+      <ul id="list" class="list"></ul>
+    </div>
+
+    <script>
+      let allData = [];
+      const loader = document.querySelector("#loading");
+
+      function displayLoading() {
+        loader.classList.add("display");
+      }
+
+      function hideLoading() {
+        loader.classList.remove("display");
+      }
+
+      const handleSearch = () => {
+        displayLoading();
+        const inputElement = document.querySelector(".search-input");
+        const searchText = inputElement.value.toLowerCase();
+        const filteredData = allData.filter((item) =>
+          item.title.toLowerCase().includes(searchText)
+        );
+        setTimeout(() => {
+          renderList(filteredData);
+          hideLoading();
+        }, 600);
+      };
+
+      function renderList(data) {
+        const listElement = document.getElementById("list");
+        const resultsInfo = document
+          .getElementById("results-info")
+          .querySelector("h4");
+
+        listElement.innerHTML = ""; // Clear existing list
+
+        if (data.length === 0) {
+          resultsInfo.textContent = "No results found";
+        } else {
+          resultsInfo.textContent = `${data.length} result(s) found`;
+          data.forEach((item) => {
+            const listItem = document.createElement("li");
+            listItem.textContent = item.title;
+            listElement.appendChild(listItem);
+          });
+        }
+      }
+
+      displayLoading();
+
+      fetch(
+        "https://raw.githubusercontent.com/KekitU/rutracker-hydra-links/main/all_categories.json"
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          allData = data.downloads;
+          renderList(allData);
+        })
+        .finally(() => hideLoading());
+    </script>
+  </body>
+</html>
