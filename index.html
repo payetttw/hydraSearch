@@ -75,6 +75,10 @@
       <div id="results-info"><h4></h4></div>
 
       <ul id="list" class="list"></ul>
+
+      <button onclick="goToTop()" id="goToTopBtn" title="Go to top">
+        <span class="material-symbols-outlined">navigation</span>
+      </button>
     </div>
 
     <script>
@@ -102,11 +106,6 @@
           item.title.toLowerCase().includes(searchText)
         );
         renderList(filteredData);
-
-        // displayLoading();
-        // setTimeout(() => {
-        //   hideLoading();
-        // }, 800);
       };
 
       function renderList(data) {
@@ -164,8 +163,6 @@
       const inputField = document.querySelector(".chosen-value");
       const dropdown = document.querySelector(".value-list");
       const dropdownArray = [...document.querySelectorAll("li")];
-      //   dropdown.classList.add("open");
-      //   inputField.focus();
       let valueArray = [];
       dropdownArray.forEach((item) => {
         valueArray.push(item.textContent);
@@ -178,7 +175,6 @@
       inputField.addEventListener("input", () => {
         dropdown.classList.add("open");
         let inputValue = inputField.value.toLowerCase();
-        let valueSubstring;
         if (inputValue.length > 0) {
           for (let j = 0; j < valueArray.length; j++) {
             if (
@@ -238,6 +234,29 @@
       });
 
       fetchCategoryData("");
+
+      // Go to Top Button Functionality
+      let mybutton = document.getElementById("goToTopBtn");
+
+      window.onscroll = function () {
+        scrollFunction();
+      };
+
+      function scrollFunction() {
+        if (
+          document.body.scrollTop > 100 ||
+          document.documentElement.scrollTop > 100
+        ) {
+          mybutton.style.display = "block";
+        } else {
+          mybutton.style.display = "none";
+        }
+      }
+
+      function goToTop() {
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+      }
     </script>
   </body>
 </html>
