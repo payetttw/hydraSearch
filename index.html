@@ -97,14 +97,56 @@
         return new Promise((resolve) => setTimeout(resolve, ms));
       }
 
+      function normalizeString(str) {
+        return str
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase();
+      }
+
+      function calculateMatchScore(title, terms) {
+        let score = 0;
+        terms.forEach((term) => {
+          const index = title.indexOf(term);
+          if (index !== -1) {
+            score += title.length - index;
+          }
+        });
+        return score;
+      }
+
       const handleSearch = async () => {
         await sleep(1500);
         const inputElement = document.querySelector(".search-input");
+        const searchText = normalizeString(inputElement.value);
 
-        const searchText = inputElement.value.toLowerCase();
-        const filteredData = allData.filter((item) =>
-          item.title.toLowerCase().includes(searchText)
-        );
+        const searchTerms = searchText
+          .split(/\s+/)
+          .filter((term) => term.length > 0);
+
+        const filteredData = allData.filter((item) => {
+          const normalizedTitle = normalizeString(item.title);
+          return searchTerms.every((term) => normalizedTitle.includes(term));
+        });
+
+        filteredData.sort((a, b) => {
+          const aNormalized = normalizeString(a.title);
+          const bNormalized = normalizeString(b.title);
+
+          const aUniqueScore = searchTerms.every((term) =>
+            aNormalized.split(" ").includes(term)
+          )
+            ? 1
+            : 0;
+          const bUniqueScore = searchTerms.every((term) =>
+            bNormalized.split(" ").includes(term)
+          )
+            ? 1
+            : 0;
+
+          return bUniqueScore - aUniqueScore;
+        });
+
         renderList(filteredData);
       };
 
@@ -114,7 +156,7 @@
           .getElementById("results-info")
           .querySelector("h4");
 
-        listElement.innerHTML = ""; // Clear existing list
+        listElement.innerHTML = "";
 
         if (data.length === 0) {
           resultsInfo.textContent = "No results found";
@@ -125,7 +167,7 @@
             listItem.classList.add("list-item");
 
             const link = document.createElement("a");
-            link.href = `${item?.uris[0]}`; // Assuming `item.url` contains the link part
+            link.href = `${item?.uris[0]}`;
             link.textContent = `[ ${index + 1} ] - ${item?.title}- [${
               item?.fileSize
             }]`;
@@ -235,7 +277,6 @@
 
       fetchCategoryData("");
 
-      // Go to Top Button Functionality
       let mybutton = document.getElementById("goToTopBtn");
 
       window.onscroll = function () {
