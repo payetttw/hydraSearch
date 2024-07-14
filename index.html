@@ -89,17 +89,24 @@
         loader.classList.remove("display");
       }
 
-      const handleSearch = () => {
-        displayLoading();
+      function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+
+      const handleSearch = async () => {
+        await sleep(1500);
         const inputElement = document.querySelector(".search-input");
+
         const searchText = inputElement.value.toLowerCase();
         const filteredData = allData.filter((item) =>
           item.title.toLowerCase().includes(searchText)
         );
-        setTimeout(() => {
-          renderList(filteredData);
-          hideLoading();
-        }, 600);
+        renderList(filteredData);
+
+        // displayLoading();
+        // setTimeout(() => {
+        //   hideLoading();
+        // }, 800);
       };
 
       function renderList(data) {
@@ -119,8 +126,10 @@
             listItem.classList.add("list-item");
 
             const link = document.createElement("a");
-            link.href = `${item.uris[0]}`; // Assuming `item.url` contains the link part
-            link.textContent = `[ ${index + 1} ] - ${item.title}`;
+            link.href = `${item?.uris[0]}`; // Assuming `item.url` contains the link part
+            link.textContent = `[ ${index + 1} ] - ${item?.title}- [${
+              item?.fileSize
+            }]`;
 
             listItem.appendChild(link);
             listElement.appendChild(listItem);
