@@ -43,48 +43,36 @@
           />
           <ul class="value-list">
             <li value="null">All categories</li>
-            <li value=" 635  ">Latest Games</li>
-            <li value="  2118 ">Multiplayer Games</li>
-            <li value="  647 ">First-Person Action</li>
-            <li value=" 646  ">Third-Person Action</li>
-            <li value="  53 ">Adventures and Quests</li>
-            <li value="  52 ">Role-Playing Games</li>
-            <li value=" 127  ">Arcades</li>
-            <li value=" 2203  ">Fighting</li>
-            <li value=" 50  ">Horror</li>
-            <li value=" 51  ">Real-Time Strategies</li>
-            <li value=" 2226  ">Turn-Based Strategies</li>
-            <li value="54   ">Simulators</li>
-            <li value=" 128  ">For the Youngest</li>
-            <li value=" 900  ">Visual Novels</li>
-            <li value="  2204 ">Puzzle Games</li>
-            <li value="278   ">Chess</li>
-            <li value=" 1008  ">Hidden Object Quests</li>
-            <li value="  5 ">Games for Windows</li>
-            <li value="  2228 ">IBM-PC Incompatible Computers</li>
-            <li value=" 1310  ">Old Games (Action)</li>
-            <li value="   2410">Old Games (Role-Playing Games)</li>
-            <li value=" 2205  ">Old Games (Strategies)</li>
-            <li value=" 2225  ">Old Games (Adventures and Quests)</li>
-            <li value="  2206 ">Old Games (Simulators)</li>
+            <li value="635">Latest Games</li>
+            <li value="2118">Multiplayer Games</li>
+            <li value="647">First-Person Action</li>
+            <li value="646">Third-Person Action</li>
+            <li value="53">Adventures and Quests</li>
+            <li value="52">Role-Playing Games</li>
+            <li value="127">Arcades</li>
+            <li value="2203">Fighting</li>
+            <li value="50">Horror</li>
+            <li value="51">Real-Time Strategies</li>
+            <li value="2226">Turn-Based Strategies</li>
+            <li value="54">Simulators</li>
+            <li value="128">For the Youngest</li>
+            <li value="900">Visual Novels</li>
+            <li value="2204">Puzzle Games</li>
+            <li value="278">Chess</li>
+            <li value="1008">Hidden Object Quests</li>
+            <li value="5">Games for Windows</li>
+            <li value="2228">IBM-PC Incompatible Computers</li>
+            <li value="1310">Old Games (Action)</li>
+            <li value="2410">Old Games (Role-Playing Games)</li>
+            <li value="2205">Old Games (Strategies)</li>
+            <li value="2225">Old Games (Adventures and Quests)</li>
+            <li value="2206">Old Games (Simulators)</li>
           </ul>
         </form>
       </div>
 
       <div id="loading"></div>
       <div id="results-info"><h4></h4></div>
-
-      <!-- <div class="selectContainer">
-        <select
-          name="category-select"
-          id="category-select"
-          onchange="handleCategoryChange()"
-        >
-          <option value="">Todos</option>
-          <option value="127">Arcades</option>
-    
-        </select>
-      </div> -->
 
       <ul id="list" class="list"></ul>
     </div>
@@ -126,17 +114,13 @@
           resultsInfo.textContent = "No results found";
         } else {
           resultsInfo.textContent = `${data.length} result(s) found`;
-          data.forEach((item) => {
-            // const listItem = document.createElement("li");
-            // listItem.textContent = item.title;
-            // listElement.appendChild(listItem);
-
+          data.forEach((item, index) => {
             const listItem = document.createElement("li");
             listItem.classList.add("list-item");
 
             const link = document.createElement("a");
             link.href = `${item.uris[0]}`; // Assuming `item.url` contains the link part
-            link.textContent = item.title;
+            link.textContent = `[ ${index + 1} ] - ${item.title}`;
 
             listItem.appendChild(link);
             listElement.appendChild(listItem);
@@ -149,13 +133,11 @@
         inputElement.value = "";
         const categorySelect = document.getElementById("category-select");
         const selectedCategory = categorySelect.value;
-        console.log("aquii");
         renderList([]);
         await fetchCategoryData(selectedCategory);
       };
 
       function fetchCategoryData(categoryId) {
-        console.log(categoryId);
         displayLoading();
         fetch(
           !categoryId
@@ -173,9 +155,8 @@
       const inputField = document.querySelector(".chosen-value");
       const dropdown = document.querySelector(".value-list");
       const dropdownArray = [...document.querySelectorAll("li")];
-      console.log(typeof dropdownArray);
-      dropdown.classList.add("open");
-      inputField.focus(); // Demo purposes only
+      //   dropdown.classList.add("open");
+      //   inputField.focus();
       let valueArray = [];
       dropdownArray.forEach((item) => {
         valueArray.push(item.textContent);
