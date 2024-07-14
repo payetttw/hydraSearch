@@ -19,20 +19,51 @@
   <body>
     <div class="mainContainer">
       <h1>"Hydra Search"</h1>
-      <form>
-        <div class="search">
-          <span class="material-symbols-outlined">search</span>
+
+      <div class="forms">
+        <form>
+          <div class="search">
+            <span class="material-symbols-outlined">search</span>
+            <input
+              onkeyup="handleSearch()"
+              class="search-input"
+              type="search"
+              placeholder="Search some stuff: super mario."
+            />
+          </div>
+        </form>
+
+        <form class="categoryFilter">
           <input
-            onkeyup="handleSearch()"
-            class="search-input"
-            type="search"
-            placeholder="Search some stuff: super mario."
+            class="chosen-value"
+            type="text"
+            value=""
+            placeholder="Categories"
+            onchange="handleCategoryChange()"
           />
-        </div>
-      </form>
+          <ul class="value-list">
+            <li value="2203">Luta</li>
+            <li value="127">Consoles Antigos</li>
+            <li value="1310">Retrô</li>
+          </ul>
+        </form>
+      </div>
 
       <div id="loading"></div>
       <div id="results-info"><h4></h4></div>
+
+      <!-- <div class="selectContainer">
+        <select
+          name="category-select"
+          id="category-select"
+          onchange="handleCategoryChange()"
+        >
+          <option value="">Todos</option>
+          <option value="127">Arcades</option>
+    
+        </select>
+      </div> -->
+
       <ul id="list" class="list"></ul>
     </div>
 
@@ -80,18 +111,110 @@
           });
         }
       }
+      const handleCategoryChange = async () => {
+        const inputElement = document.querySelector(".search-input");
+        inputElement.value = "";
+        const categorySelect = document.getElementById("category-select");
+        const selectedCategory = categorySelect.value;
+        console.log("aquii");
+        renderList([]);
+        await fetchCategoryData(selectedCategory);
+      };
 
-      displayLoading();
+      function fetchCategoryData(categoryId) {
+        console.log(categoryId);
+        displayLoading();
+        fetch(
+          !categoryId
+            ? `https://raw.githubusercontent.com/KekitU/rutracker-hydra-links/main/all_categories.json`
+            : `https://raw.githubusercontent.com/KekitU/rutracker-hydra-links/main/Categories/${categoryId}.json`
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            allData = data.downloads;
+            renderList(allData);
+          })
+          .finally(() => hideLoading());
+      }
 
-      fetch(
-        "https://raw.githubusercontent.com/KekitU/rutracker-hydra-links/main/all_categories.json"
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          allData = data.downloads;
-          renderList(allData);
-        })
-        .finally(() => hideLoading());
+      const inputField = document.querySelector(".chosen-value");
+      const dropdown = document.querySelector(".value-list");
+      const dropdownArray = [...document.querySelectorAll("li")];
+      console.log(typeof dropdownArray);
+      dropdown.classList.add("open");
+      inputField.focus(); // Demo purposes only
+      let valueArray = [];
+      dropdownArray.forEach((item) => {
+        valueArray.push(item.textContent);
+      });
+
+      const closeDropdown = () => {
+        dropdown.classList.remove("open");
+      };
+
+      inputField.addEventListener("input", () => {
+        dropdown.classList.add("open");
+        let inputValue = inputField.value.toLowerCase();
+        let valueSubstring;
+        if (inputValue.length > 0) {
+          for (let j = 0; j < valueArray.length; j++) {
+            if (
+              !(
+                inputValue.substring(0, inputValue.length) ===
+                valueArray[j].substring(0, inputValue.length).toLowerCase()
+              )
+            ) {
+              dropdownArray[j].classList.add("closed");
+            } else {
+              dropdownArray[j].classList.remove("closed");
+            }
+          }
+        } else {
+          for (let i = 0; i < dropdownArray.length; i++) {
+            dropdownArray[i].classList.remove("closed");
+          }
+        }
+      });
+
+      dropdownArray.forEach((item) => {
+        item.addEventListener("click", (evt) => {
+          inputField.value = item.textContent;
+          dropdownArray.forEach((dropdown) => {
+            dropdown.classList.add("closed");
+          });
+        });
+      });
+
+      inputField.addEventListener("focus", () => {
+        inputField.placeholder = "Search by Category";
+        dropdown.classList.add("open");
+        dropdownArray.forEach((dropdown) => {
+          dropdown.classList.remove("closed");
+        });
+      });
+
+      inputField.addEventListener("blur", () => {
+        inputField.placeholder = "Categories";
+        dropdown.classList.remove("open");
+      });
+
+      document.addEventListener("click", (evt) => {
+        const isDropdown = dropdown.contains(evt.target);
+        const isInput = inputField.contains(evt.target);
+
+        if (isDropdown) {
+          const inputElement = document.querySelector(".search-input");
+          inputElement.value = "";
+
+          fetchCategoryData(evt.target.value);
+        }
+
+        if (!isDropdown && !isInput) {
+          dropdown.classList.remove("open");
+        }
+      });
+
+      fetchCategoryData("");
     </script>
   </body>
 </html>
