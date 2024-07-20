@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+<_Repacks!DOCTYPE html>
 <html lang="en">
   <head>
     <meta name="version" content="1.0" />
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8Tiny_Repacks
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hydra Search</title>
     <link rel="stylesheet" href="style.css" />
@@ -44,31 +44,16 @@
             onchange="handleCategoryChange()"
           />
           <ul class="value-list">
-            <li value="null">All categories</li>
-            <li value="635">Latest Games</li>
-            <li value="2118">Multiplayer Games</li>
-            <li value="647">First-Person Action</li>
-            <li value="646">Third-Person Action</li>
-            <li value="53">Adventures and Quests</li>
-            <li value="52">Role-Playing Games</li>
-            <li value="127">Arcades</li>
-            <li value="2203">Fighting</li>
-            <li value="50">Horror</li>
-            <li value="51">Real-Time Strategies</li>
-            <li value="2226">Turn-Based Strategies</li>
-            <li value="54">Simulators</li>
-            <li value="128">For the Youngest</li>
-            <li value="900">Visual Novels</li>
-            <li value="2204">Puzzle Games</li>
-            <li value="278">Chess</li>
-            <li value="1008">Hidden Object Quests</li>
-            <li value="5">Games for Windows</li>
-            <li value="2228">IBM-PC Incompatible Computers</li>
-            <li value="1310">Old Games (Action)</li>
-            <li value="2410">Old Games (Role-Playing Games)</li>
-            <li value="2205">Old Games (Strategies)</li>
-            <li value="2225">Old Games (Adventures and Quests)</li>
-            <li value="2206">Old Games (Simulators)</li>
+            <li value="1">Pt-Br - 🇧🇷</li>
+            <li value="2">Dodi_Repacks</li>
+            <li value="3">Empress</li>
+            <li value="4">FitGirl</li>
+            <li value="5">GOG</li>
+            <li value="6">KaOs</li>
+            <li value="7">OnlineFix</li>
+            <li value="8">Tiny_Repacks</li>
+            <li value="9">Xatab_Repacks</li>
+            <li value="10">Horror</li>
           </ul>
         </form>
       </div>
@@ -191,11 +176,51 @@
 
       function fetchCategoryData(categoryId) {
         displayLoading();
-        fetch(
-          !categoryId
-            ? `https://raw.githubusercontent.com/KekitU/rutracker-hydra-links/main/all_categories.json`
-            : `https://raw.githubusercontent.com/KekitU/rutracker-hydra-links/main/Categories/${categoryId}.json`
-        )
+        console.log(categoryId, "aquii");
+        let url;
+
+        switch (categoryId.toString()) {
+          case "1":
+            url = "https://hydralinks.cloud/sources/steam-amiga.json";
+            break;
+
+          case "2":
+            url = "https://hydralinks.cloud/sources/dodi.json";
+            break;
+
+          case "3":
+            url = "https://hydralinks.cloud/sources/empress.json";
+            break;
+
+          case "4":
+            url = "https://hydralinks.cloud/sources/fitgirl.json";
+            break;
+
+          case "5":
+            url = "https://hydralinks.cloud/sources/gog.json";
+            break;
+
+          case "6":
+            url = "https://hydralinks.cloud/sources/kaoskrew.json";
+            break_Repacks; - Steam Amiga -
+
+          case "7":
+            url = "https://hydralinks.cloud/sources/onlinefix.json";
+            break;
+
+          case "Tiny_Repacks      url = "https://hydralinks.cloud/sources/tinyrepacks.json";
+            break;
+
+          case "Xatab_Repacks     url = "https://hydralinks.cloud/sources/xatab.json";
+            break;
+
+          default:
+            url =
+              "https://raw.githubusercontent.com/KekitU/rutracker-hydra-links/main/";
+            break;
+        }
+
+        fetch(url)
           .then((res) => res.json())
           .then((data) => {
             allData = data.downloads;
