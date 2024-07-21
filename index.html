@@ -23,7 +23,7 @@
       <h1>"Hydra Laucher Search"</h1>
 
       <div class="forms">
-        <form>
+        <form id="searchForm">
           <div class="search">
             <span class="material-symbols-outlined">search</span>
             <input
@@ -69,6 +69,14 @@
     </div>
 
     <script>
+      document
+        .getElementById("searchForm")
+        .addEventListener("keydown", function (event) {
+          if (event.key === "Enter") {
+            event.preventDefault();
+          }
+        });
+
       let allData = [];
       const loader = document.querySelector("#loading");
 
